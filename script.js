@@ -5,9 +5,13 @@ var unknownvalue = "0";
 var enteredresponse = [];
 
 var currentcombination = ['1','1','2','2']
-var b = ['1','1','0','2'];
 
+addButt();
 combinationGenerator();
+document.getElementById('pText').innerHTML = combinationlist;
+iconSetter(currentcombination);
+
+// TODO: default radio values
 function getRadioValue(radioname) {
     var radios = document.getElementsByName(radioname);
     for (var i = 0, length = radios.length; i < length; i++) {
@@ -18,25 +22,31 @@ function getRadioValue(radioname) {
             else if (radioname === "incorrect") {
                 incorrectvalue = radios[i].value;
             }
-            // else if (radioname === "unknown") {
-            //  unknownvalue = radios[i].value;
-            // }
-            else {break;}
+            // else {break;}
         }
     }
     unknownvalue = 4 - correctvalue - incorrectvalue;
     enteredresponse.length = 0;
     enteredresponse.push(Number(correctvalue), Number(incorrectvalue), unknownvalue);
 
+
+}
+
+function sumbitActions() {
+    getRadioValue("correct");
+    getRadioValue("incorrect");
+    combinationComparer(currentcombination,enteredresponse)
     document.getElementById('pText').innerHTML = combinationlist;
+    nextTry();
     iconSetter(currentcombination);
 }
 
 function addButt() {
     var butx = document.getElementById("submitButton");
     butx.addEventListener("click", function() {
-                                            getRadioValue("correct");
-                                            getRadioValue("incorrect");
+                                            sumbitActions();
+                                            // getRadioValue("correct");
+                                            // getRadioValue("incorrect");
                                             // getRadioValue("unknown");
                                             });
     $(document).ready(function() {
@@ -89,7 +99,6 @@ function getIntersection(array1, array2) {
                 array1.splice(i,1);
                 array2.splice(j,1);
             }
-            // else {continue;}
         }
     }
     return returnarray;
@@ -101,22 +110,18 @@ function getIntersection(array1, array2) {
 function combinationComparer(enteredcombination, response) {
     var temporarycombinationlist = [];
     for (var i = combinationlist.length - 1; i >= 0; i--) {
-            // console.log("hi")
-            // console.log(combinationlist.length)
-            // console.log(i)
+        // console.log(combinationlist.length)
+        // console.log(i)
 
         var temporaryenteredcombination = enteredcombination.slice();
         var testingcombination = combinationlist[i].split("");
         var generatedresponse = [0,0];
-        // console.log(generatedresponse)
-        // console.log(combinationlist[i]);
         if (response[2] === 4) {
             // all wrong
             // if no intersection, keep testingcombination
             if (getIntersection(testingcombination, temporaryenteredcombination).length === 0) {
                 temporarycombinationlist.push(combinationlist[i]);
             }
-            // else {continue;}
         }
         else {
             for (var j = testingcombination.length - 1; j >= 0; j--) {
@@ -125,21 +130,11 @@ function combinationComparer(enteredcombination, response) {
                     generatedresponse[0]++;
                     testingcombination.splice(j,1);
                     temporaryenteredcombination.splice(j,1);
-                    // console.log(combinationlist[i])
                 }
-                // else {continue;}
             }
-            // console.log(testingcombination, temporaryenteredcombination)
-            // break;
-        
             generatedresponse[1] = generatedresponse[1] + getIntersection(testingcombination, temporaryenteredcombination).length
-
-
-            // break;
             if (generatedresponse[0] === response[0] && generatedresponse[1] === response[1]) {
                 temporarycombinationlist.push(combinationlist[i]);
-                console.log("push")
-                // break;
             }
             // else {
             //     console.log(arrayequality(generatedresponse,response))
@@ -149,6 +144,11 @@ function combinationComparer(enteredcombination, response) {
     console.log(temporarycombinationlist)
     combinationlist = temporarycombinationlist.slice();
     temporarycombinationlist.length = 0;
+}
+
+function nextTry() {
+    currentcombination = combinationlist[0].split("")
+    iconSetter(currentcombination)
 }
 
 function arrayequality(array1, array2) {
