@@ -3,15 +3,14 @@ var correctvalue = "0";
 var incorrectvalue = "0";
 var unknownvalue = "0";
 var enteredresponse = [];
-
 var currentcombination = ['1','1','2','2']
 
+resetRadio();
 addButt();
 combinationGenerator();
 document.getElementById('pText').innerHTML = combinationlist;
 iconSetter(currentcombination);
 
-// TODO: default radio values
 function getRadioValue(radioname) {
     var radios = document.getElementsByName(radioname);
     for (var i = 0, length = radios.length; i < length; i++) {
@@ -28,8 +27,6 @@ function getRadioValue(radioname) {
     unknownvalue = 4 - correctvalue - incorrectvalue;
     enteredresponse.length = 0;
     enteredresponse.push(Number(correctvalue), Number(incorrectvalue), unknownvalue);
-
-
 }
 
 function sumbitActions() {
@@ -39,17 +36,19 @@ function sumbitActions() {
     document.getElementById('pText').innerHTML = combinationlist;
     nextTry();
     iconSetter(currentcombination);
+    resetRadio();
+}
+
+function resetRadio() {
+    document.getElementById("correct0").checked = true;
+    document.getElementById("incorrect0").checked = true;
 }
 
 function addButt() {
     var butx = document.getElementById("submitButton");
-    butx.addEventListener("click", function() {
-                                            sumbitActions();
-                                            // getRadioValue("correct");
-                                            // getRadioValue("incorrect");
-                                            // getRadioValue("unknown");
-                                            });
+    butx.addEventListener("click", function() {sumbitActions();});
     $(document).ready(function() {
+        $( "#pText" ).hide();
         $( "#togbut" ).click(function() {
             $( "#pText" ).toggle();
         });
@@ -104,15 +103,12 @@ function getIntersection(array1, array2) {
     return returnarray;
 }
 
-// enteredcombination is an array ['0','0','0','0'] -> ['3','3','3','3'] CHAR NOT INT
-// assume that testingcombination is correct combination
-// response is [correct, incorrect, unknown] INT NOT CHAR
 function combinationComparer(enteredcombination, response) {
+    // enteredcombination is an array ['0','0','0','0'] -> ['3','3','3','3'] CHAR NOT INT
+    // assume that testingcombination is correct combination
+    // response is [correct, incorrect, unknown] INT NOT CHAR 
     var temporarycombinationlist = [];
     for (var i = combinationlist.length - 1; i >= 0; i--) {
-        // console.log(combinationlist.length)
-        // console.log(i)
-
         var temporaryenteredcombination = enteredcombination.slice();
         var testingcombination = combinationlist[i].split("");
         var generatedresponse = [0,0];
@@ -136,9 +132,6 @@ function combinationComparer(enteredcombination, response) {
             if (generatedresponse[0] === response[0] && generatedresponse[1] === response[1]) {
                 temporarycombinationlist.push(combinationlist[i]);
             }
-            // else {
-            //     console.log(arrayequality(generatedresponse,response))
-            // }
         }
     }
     console.log(temporarycombinationlist)
@@ -157,6 +150,14 @@ function arrayequality(array1, array2) {
     });
     return is_same;
 }
+
+function randomCombo() {
+    for (i = 0; i < currentcombination.length; i++){
+        currentcombination[i] = Math.floor(Math.random()*4)+"";
+    }
+    iconSetter(currentcombination);
+}
+
 function getTime() {
     var x = performance.now();
     combinationGenerator();
