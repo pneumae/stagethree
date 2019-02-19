@@ -3,7 +3,13 @@ var correctvalue = "0";
 var incorrectvalue = "0";
 var unknownvalue = "0";
 var enteredresponse = [];
-var currentcombination = ['1','1','2','2']
+var currentcombination = ['0','0','1','1'];
+var images = {
+    0 : "Resources/medal.gif",
+    1 : "Resources/scroll.gif",
+    2 : "Resources/wine.gif",
+    3 : "Resources/food.gif"
+}
 
 resetRadio();
 addButt();
@@ -45,8 +51,13 @@ function resetRadio() {
 }
 
 function addButt() {
-    var butx = document.getElementById("submitButton");
-    butx.addEventListener("click", function() {sumbitActions();});
+    document.getElementById("submitButton").addEventListener("click", function() {sumbitActions();});
+    for (let i = 0; i < 4; i++) {
+        for (let j = 0; j < 4; j++) {
+            var icon = "icon" + i + j;
+            document.getElementById(icon).addEventListener("click", function() {iconCombinationSetter(i,j);});
+        }
+    }
     $(document).ready(function() {
         $( "#pText" ).hide();
         $( "#togbut" ).click(function() {
@@ -56,16 +67,15 @@ function addButt() {
 }
 
 function iconSetter(currentcombination) {
-    var images = {
-        0 : "Resources/medal.gif",
-        1 : "Resources/scroll.gif",
-        2 : "Resources/wine.gif",
-        3 : "Resources/food.gif"
-    }
-    document.getElementById("imageone").src = images[currentcombination[0]];
-    document.getElementById("imagetwo").src = images[currentcombination[1]];
-    document.getElementById("imagethree").src = images[currentcombination[2]];
-    document.getElementById("imagefour").src = images[currentcombination[3]];
+    document.getElementById("icon0").src = images[currentcombination[0]];
+    document.getElementById("icon1").src = images[currentcombination[1]];
+    document.getElementById("icon2").src = images[currentcombination[2]];
+    document.getElementById("icon3").src = images[currentcombination[3]];
+}
+
+function iconCombinationSetter(parent,child) {
+    currentcombination[parent] = child+"";
+    iconSetter(currentcombination);
 }
 
 function combinationGenerator() {
