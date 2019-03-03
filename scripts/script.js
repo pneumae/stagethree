@@ -42,6 +42,7 @@ function sumbitActions() {
     document.getElementById('pText').innerHTML = combinationlist;
     nextTry();
     iconSetter(currentcombination);
+    document.getElementById("foodCount").innerHTML = checkFood(); 
     resetRadio();
 }
 
@@ -55,7 +56,11 @@ function addButt() {
     for (let i = 0; i < 4; i++) {
         for (let j = 0; j < 4; j++) {
             var icon = "icon" + i + j;
-            document.getElementById(icon).addEventListener("click", function() {iconCombinationSetter(i,j);});
+            document.getElementById(icon).addEventListener("click", function() {iconCombinationSetter(i,j);
+                $(".dropdown-content").click(function() {
+                $(".dropdown-content").css("display","none");
+                });
+            });
         }
     }
     $(document).ready(function() {
@@ -63,6 +68,25 @@ function addButt() {
         $( "#togbut" ).click(function() {
             $( "#pText" ).toggle();
         });
+        if (/Mobi/.test(navigator.userAgent)) {
+            $(document).on("mousedown", function() { 
+                if($('.dropdown-content').is(":visible")) {
+                    $('.dropdown-content').hide();
+                    };
+            });
+            $(".dropdown").on("mousedown", function(e) {
+                e.stopPropagation();
+                $(".dropdown-content").hide();
+                $(".dropdown-content",this).show();
+            });
+        }
+        else {
+            $(".dropdown").hover(function() {
+                $(".dropdown-content", this).show();
+                },function() {
+                $(".dropdown-content").hide();
+            });
+        }
     });
 }
 
@@ -162,10 +186,33 @@ function arrayequality(array1, array2) {
 }
 
 function randomCombo() {
-    for (i = 0; i < currentcombination.length; i++){
+    for (var i = 0; i < currentcombination.length; i++){
         currentcombination[i] = Math.floor(Math.random()*4)+"";
     }
     iconSetter(currentcombination);
+}
+
+function checkFood() {
+    var foodcount = 0;
+    if ( combinationlist.indexOf( '3333' ) > -1 ) {
+        foodcount = 4;
+        return foodcount;
+    }
+    else {
+        for (var i = 0; i < combinationlist.length; i++) {
+            var testingcombination = combinationlist[i].split("");
+            var x = 0;
+            for (var j = 0; j < 4; j++) {
+                if (testingcombination[j] == "3") {
+                    x++;
+                }
+            }
+            if (x>foodcount) {
+                foodcount = x;
+            }
+        }
+        return foodcount;
+    }
 }
 
 function getTime() {
