@@ -3,6 +3,9 @@
 	<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
 	<meta content="utf-8" http-equiv="encoding">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<script src="scripts/jquery-1.10.1.min.js" type="text/javascript"></script>
+	<script src="scripts/script.js" async></script>
+	<link rel="stylesheet" type="text/css" href="styles/style.css">
 </head>
 <body>
 	<div id="itemicons">
@@ -44,7 +47,7 @@
 		</div>
 	</div>
 	<div id="correctRadio">
-		Pleased
+		Correct
 		<input id="correct0" type="radio" name="correct" value="0"><label for="correct0">0</label>	
 		<input id="correct1" type="radio" name="correct" value="1"><label for="correct1">1</label>
 		<input id="correct2" type="radio" name="correct" value="2"><label for="correct2">2</label>
@@ -69,13 +72,11 @@
 	</div> -->
 	<button id="submitButton">Submit</button>	
 
-	Food Remaining: <span id="foodCount"></span>
+	<div>Wine Remaining: <span id="wineCount"></span></div>
+	<div>Food Remaining: <span id="foodCount"></span></div>
 
+	<div style="width: 20px"><img id="refreshButton" src="Resources/refresh.png" style="max-width:100%; max-height:100%;"></div>
 	<button id="togbut">Show</button>
 	<div id="pText"; style="width:500px; word-wrap:break-word; position: fixed; max-width: 100%;";>
 	</div>
-
-	<script src="scripts/jquery-1.10.1.min.js"></script>
-	<script src="scripts/script.js" type="text/javascript"></script>
-	<link rel="stylesheet" type="text/css" href="styles/style.css">
 </body>

@@ -3,7 +3,7 @@ var correctvalue = "0";
 var incorrectvalue = "0";
 var unknownvalue = "0";
 var enteredresponse = [];
-var currentcombination = ['0','0','1','1'];
+var currentcombination = ["0","0","1","1"];
 var images = {
     0 : "Resources/medal.gif",
     1 : "Resources/scroll.gif",
@@ -11,11 +11,15 @@ var images = {
     3 : "Resources/food.gif"
 }
 
+var counter = 0
+
 resetRadio();
 addButt();
 combinationGenerator();
-document.getElementById('pText').innerHTML = combinationlist;
+document.getElementById("pText").innerHTML = combinationlist;
 iconSetter(currentcombination);
+document.getElementById("foodCount").innerHTML = checkFood("3"); 
+document.getElementById("wineCount").innerHTML = checkFood("2"); 
 
 function getRadioValue(radioname) {
     var radios = document.getElementsByName(radioname);
@@ -27,7 +31,6 @@ function getRadioValue(radioname) {
             else if (radioname === "incorrect") {
                 incorrectvalue = radios[i].value;
             }
-            // else {break;}
         }
     }
     unknownvalue = 4 - correctvalue - incorrectvalue;
@@ -39,11 +42,14 @@ function sumbitActions() {
     getRadioValue("correct");
     getRadioValue("incorrect");
     combinationComparer(currentcombination,enteredresponse)
-    document.getElementById('pText').innerHTML = combinationlist;
+    document.getElementById("pText").innerHTML = combinationlist;
     nextTry();
     iconSetter(currentcombination);
-    document.getElementById("foodCount").innerHTML = checkFood(); 
+    document.getElementById("foodCount").innerHTML = checkFood("3"); 
+    document.getElementById("wineCount").innerHTML = checkFood("2"); 
     resetRadio();
+    counter++
+    console.log(counter)
 }
 
 function resetRadio() {
@@ -53,10 +59,12 @@ function resetRadio() {
 
 function addButt() {
     document.getElementById("submitButton").addEventListener("click", function() {sumbitActions();});
+    document.getElementById("refreshButton").addEventListener("click", function() {getNewCombination();});
     for (let i = 0; i < 4; i++) {
         for (let j = 0; j < 4; j++) {
             var icon = "icon" + i + j;
-            document.getElementById(icon).addEventListener("click", function() {iconCombinationSetter(i,j);
+            document.getElementById(icon).addEventListener("click", function() {
+                iconCombinationSetter(i,j);
                 $(".dropdown-content").click(function() {
                 $(".dropdown-content").css("display","none");
                 });
@@ -70,8 +78,8 @@ function addButt() {
         });
         if (/Mobi/.test(navigator.userAgent)) {
             $(document).on("mousedown", function() { 
-                if($('.dropdown-content').is(":visible")) {
-                    $('.dropdown-content').hide();
+                if($(".dropdown-content").is(":visible")) {
+                    $(".dropdown-content").hide();
                     };
             });
             $(".dropdown").on("mousedown", function(e) {
@@ -98,6 +106,7 @@ function iconSetter(currentcombination) {
 }
 
 function iconCombinationSetter(parent,child) {
+    // Used in addButt(), sets the visible icon to dropdown-selected value
     currentcombination[parent] = child+"";
     iconSetter(currentcombination);
 }
@@ -111,7 +120,7 @@ function combinationGenerator() {
             while (k < 4) {
                 var l = 0;
                 while (l < 4){
-                    combinationlist.push(''+i+j+k+l);
+                    combinationlist.push(""+i+j+k+l);
                     l++;
                 }
                 k++;
@@ -138,7 +147,7 @@ function getIntersection(array1, array2) {
 }
 
 function combinationComparer(enteredcombination, response) {
-    // enteredcombination is an array ['0','0','0','0'] -> ['3','3','3','3'] CHAR NOT INT
+    // enteredcombination is an array ["0","0","0","0"] -> ["3","3","3","3"] CHAR NOT INT
     // assume that testingcombination is correct combination
     // response is [correct, incorrect, unknown] INT NOT CHAR 
     var temporarycombinationlist = [];
@@ -168,7 +177,6 @@ function combinationComparer(enteredcombination, response) {
             }
         }
     }
-    console.log(temporarycombinationlist)
     combinationlist = temporarycombinationlist.slice();
     temporarycombinationlist.length = 0;
 }
@@ -192,9 +200,9 @@ function randomCombo() {
     iconSetter(currentcombination);
 }
 
-function checkFood() {
+function checkFood(item) {
     var foodcount = 0;
-    if ( combinationlist.indexOf( '3333' ) > -1 ) {
+    if ( combinationlist.indexOf( "3333" ) > -1 ) {
         foodcount = 4;
         return foodcount;
     }
@@ -203,7 +211,7 @@ function checkFood() {
             var testingcombination = combinationlist[i].split("");
             var x = 0;
             for (var j = 0; j < 4; j++) {
-                if (testingcombination[j] == "3") {
+                if (testingcombination[j] == item) {
                     x++;
                 }
             }
@@ -212,6 +220,35 @@ function checkFood() {
             }
         }
         return foodcount;
+    }
+}
+
+function getNewCombination() {
+    // Try to delay wine and food
+    var temp = currentcombination;
+    function twoOrThreeCheck (x) {
+        for (var i = 0; i < combinationlist.length; i++) {
+            var testingcombination = combinationlist[i].split("");
+            if (currentcombination === testingcombination) {
+                continue;
+            }
+            console.log(x)
+            if (x === 0 && (testingcombination.includes("2") || testingcombination.includes("3"))) {
+                continue;
+            }
+            else if (x === 1 && testingcombination.includes("3")) {
+                continue;
+            }
+            else {
+                currentcombination = testingcombination;
+                iconSetter(currentcombination);
+                break;
+            }
+        }
+    }
+    twoOrThreeCheck(0);
+    if (temp === currentcombination) {
+        twoOrThreeCheck(1);
     }
 }
 
